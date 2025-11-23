@@ -36,7 +36,7 @@ public:
 
 protected:
     virtual void run() = 0;
-    virtual constexpr char* method_name() = 0;
+    virtual constexpr const char* method_name() = 0;
 
     void exec_process(Proc& p) {
         logger->debug("模拟时刻{}, 执行Proc{}, 任务到来时间{}, 优先级{}, 需要用时{}, 结束时间{}.", cur_time, p.ID, p.arrival_time, p.priority, p.time_cost, cur_time + p.time_cost);
@@ -60,7 +60,7 @@ protected:
             exec_process(procs[i]);
         }
     }
-    const char* method_name() override { return "FCFS"; }
+    constexpr const char* method_name() override { return "FCFS"; }
 };
 
 class ProcScheduler_SJF : public ProcSchedulerBase {
@@ -83,7 +83,7 @@ protected:
             }
         }
     }
-    const char* method_name() override { return "SJF"; }
+    constexpr const char* method_name() override { return "SJF"; }
 private:
     struct cmp{
         bool operator()(const Proc* a, const Proc* b) { return a->time_cost > b->time_cost; }
@@ -112,7 +112,7 @@ protected:
             }
         }
     }
-    const char* method_name() override { return "HPF"; }
+    constexpr const char* method_name() override { return "HPF"; }
 private:
     struct cmp{
         bool operator()(const Proc* a, const Proc* b) { return a->priority > b->priority || a->priority == b->priority && a->time_cost > b->time_cost; }
