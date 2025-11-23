@@ -18,7 +18,7 @@ public:
             p = {
                 .ID = cur_id++,
                 .arrival_time = rng.randu(0, 100),
-                .time_cost = rng.randu(0, 300),
+                .time_cost = rng.randu(1, 300),
                 .priority = rng.randu(1, 5),
             };
         });
