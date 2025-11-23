@@ -10,6 +10,7 @@ public:
     ProcSchedulerBase(std::vector<Proc> _procs) : procs(_procs) {
         logger = stslog::LogRegistry::instance().get_logger("logger");
     }
+    ~ProcSchedulerBase() = default;
 
     void exec() {
         logger->info("使用{}模拟.", this->method_name());
