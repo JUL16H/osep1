@@ -1,0 +1,3 @@
+[submodule "external/stslog"]
+	path = external/stslog
+	url = https://github.com/JUL16H/stslog.git
