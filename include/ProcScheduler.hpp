@@ -115,7 +115,7 @@ protected:
     const char* method_name() override { return "HPF"; }
 private:
     struct cmp{
-        bool operator()(const Proc* a, const Proc* b) { return a->priority < b->priority || a->priority == b->priority && a->time_cost > b->time_cost; }
+        bool operator()(const Proc* a, const Proc* b) { return a->priority > b->priority || a->priority == b->priority && a->time_cost > b->time_cost; }
     };
     unsigned idx = 0;
     std::priority_queue<Proc*, std::vector<Proc*>, cmp> arrived_procs;
