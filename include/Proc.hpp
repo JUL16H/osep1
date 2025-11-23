@@ -2,7 +2,8 @@
 
 struct Proc {
     unsigned ID;
-    unsigned beg_time;
+    unsigned arrival_time;
+    unsigned finish_time;
     unsigned time_cost;
     unsigned priority;
 };
