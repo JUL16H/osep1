@@ -175,7 +175,7 @@ private:
 
 class ProcScheduler_MLFQ : public ProcSchedulerBase {
 public:
-    ProcScheduler_MLFQ(std::vector<Proc> _procs, unsigned _nq = 5,unsigned _ts = 5)
+    ProcScheduler_MLFQ(std::vector<Proc> _procs, unsigned _nq = 5, unsigned _ts = 5)
      : ProcSchedulerBase(_procs), num_queue(_nq), base_time_slice(_ts) {
         ques.resize(num_queue);
     }
@@ -197,7 +197,7 @@ protected:
                     exec_process(*ques[i].front(), exec_time(i));
                     if (ques[i].front()->exec_time < ques[i].front()->time_cost) {
                         ques[i].front()->priority = std::min(i + 1, num_queue - 1);
-                        ques[std::min(i + 1, num_queue - 1)].push(ques[i].front());
+                        ques[ques[i].front()->priority].push(ques[i].front());
                     }
                     ques[i].pop();
                     break;
