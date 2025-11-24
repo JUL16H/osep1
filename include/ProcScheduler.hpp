@@ -11,7 +11,9 @@ public:
         logger = stslog::LogRegistry::instance().get_logger("logger");
     }
     ~ProcSchedulerBase() = default;
+    std::vector<unsigned> operator()() { return this->exec(); }
 
+protected:
     std::vector<unsigned> exec() {
         logger->info("使用{}模拟.", this->method_name());
         run();
@@ -37,7 +39,6 @@ public:
         return exec_order;
     }
 
-protected:
     virtual void run() = 0;
     virtual constexpr const char* method_name() = 0;
 

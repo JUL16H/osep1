@@ -15,17 +15,11 @@ int main() {
     ProcGenerator procGenerator;
     procGenerator.randomize_procs(10);
 
-    ProcScheduler_FCFS fcfs(procGenerator.get_procs());
-    fcfs.exec();
+    ProcScheduler_FCFS{procGenerator.get_procs()}();
+    ProcScheduler_SJF{procGenerator.get_procs()}();
+    ProcScheduler_HPF{procGenerator.get_procs()}();
+    ProcScheduler_RR{procGenerator.get_procs()}();
 
-    ProcScheduler_SJF sjf(procGenerator.get_procs());
-    sjf.exec();
-
-    ProcScheduler_HPF hpf(procGenerator.get_procs());
-    hpf.exec();
-
-    ProcScheduler_RR rr(procGenerator.get_procs());
-    rr.exec();
 
     return 0;
 }
