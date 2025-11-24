@@ -19,6 +19,7 @@ int main() {
     ProcScheduler_SJF{procGenerator.get_procs()}();
     ProcScheduler_HPF{procGenerator.get_procs()}();
     ProcScheduler_RR{procGenerator.get_procs()}();
+    ProcScheduler_MLFQ{procGenerator.get_procs()}();
 
     return 0;
 }

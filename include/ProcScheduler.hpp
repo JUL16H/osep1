@@ -15,7 +15,7 @@ public:
 
 protected:
     std::vector<unsigned> exec() {
-        logger->info("使用{}模拟.", this->method_name());
+        logger->info("使用{}.", this->method_name());
         run();
 
         double avg_turnaround_time = 0;
@@ -30,7 +30,7 @@ protected:
         avg_turnaround_time /= procs.size();
         avg_weighted_turnaround_time /= procs.size();
 
-        logger->info("{}模拟结束, 平均周转时间{:.2f}, 平均带权周转时间{:.2f}.",
+        logger->info("{}运行完成, 平均周转时间{:.2f}, 平均带权周转时间{:.2f}.",
             this->method_name(),
             avg_turnaround_time,
             avg_weighted_turnaround_time
@@ -170,4 +170,44 @@ private:
     unsigned idx = 0;
     std::queue<Proc*> que;
     constexpr const unsigned clock_time() { return 100; }
+};
+
+class ProcScheduler_MLFQ : public ProcSchedulerBase {
+public:
+    ProcScheduler_MLFQ(std::vector<Proc> _procs) : ProcSchedulerBase(_procs)
+    {
+        ques.resize(num_queue());
+    }
+protected:
+    void run() override {
+        while (true) {
+            while (idx < procs.size() && cur_time >= procs[idx].arrival_time) {
+                procs[idx].priority = 0;
+                ques[0].push(&procs[idx++]);
+            }
+            if (std::ranges::all_of(ques, [](std::queue<Proc*> &que){return que.empty(); })) {
+                if (idx == procs.size())
+                    return;
+                cur_time = procs[idx].arrival_time;
+                continue;
+            }
+            for (unsigned i = 0; i < num_queue(); i++) {
+                if (!ques[i].empty()) {
+                    exec_process(*ques[i].front(), exec_time(i));
+                    if (ques[i].front()->exec_time < ques[i].front()->time_cost) {
+                        ques[i].front()->priority = std::min(i + 1, num_queue() - 1);
+                        ques[std::min(i + 1, num_queue() - 1)].push(ques[i].front());
+                    }
+                    ques[i].pop();
+                    break;
+                }
+            }
+        }
+    }
+    constexpr const char* method_name() override { return "MLFQ"; }
+private:
+    unsigned idx = 0;
+    constexpr const unsigned num_queue() { return 5; }
+    constexpr const unsigned exec_time(unsigned i) { return 5<<i; }
+    std::vector<std::queue<Proc*>> ques;
 };
