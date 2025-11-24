@@ -64,9 +64,9 @@ protected:
 
 protected:
     std::shared_ptr<stslog::Logger> logger;
+    std::vector<Proc> procs;
     std::vector<unsigned> exec_order;
     unsigned cur_time = 0;
-    std::vector<Proc> procs;
 };
 
 class ProcScheduler_FCFS : public ProcSchedulerBase {
@@ -174,8 +174,7 @@ private:
 
 class ProcScheduler_MLFQ : public ProcSchedulerBase {
 public:
-    ProcScheduler_MLFQ(std::vector<Proc> _procs) : ProcSchedulerBase(_procs)
-    {
+    ProcScheduler_MLFQ(std::vector<Proc> _procs) : ProcSchedulerBase(_procs) {
         ques.resize(num_queue());
     }
 protected:

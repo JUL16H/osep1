@@ -4,13 +4,14 @@
 class RNG {
 public:
     RNG() : seed(std::random_device{}()), gen(seed) {}
-    unsigned randu(unsigned l, unsigned r) {
+    RNG(unsigned _seed) : seed(_seed), gen(seed) {}
+    unsigned randu(unsigned l, unsigned r)  {
         std::uniform_int_distribution<unsigned> dis(l, r);
         return dis(gen);
     }
-    auto get_seed() { return seed; }
+    auto get_seed() const noexcept { return seed; }
 
 private:
-    unsigned seed;
+    const unsigned seed;
     std::mt19937 gen;
 };
