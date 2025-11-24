@@ -1,9 +1,9 @@
 #pragma once
 #include <stslog/stslog.hpp>
 #include <vector>
-#include "Proc.hpp"
 #include <algorithm>
 #include <queue>
+#include "Proc.hpp"
 
 class ProcSchedulerBase {
 public:
@@ -12,7 +12,7 @@ public:
     }
     ~ProcSchedulerBase() = default;
 
-    void exec() {
+    std::vector<unsigned> exec() {
         logger->info("使用{}模拟.", this->method_name());
         run();
 
@@ -33,6 +33,8 @@ public:
             avg_turnaround_time,
             avg_weighted_turnaround_time
         );
+
+        return exec_order;
     }
 
 protected:
@@ -40,6 +42,7 @@ protected:
     virtual constexpr const char* method_name() = 0;
 
     void exec_process(Proc& p) {
+        exec_order.push_back(p.ID);
         logger->debug("时刻{:4d}, 执行Proc{}, 任务到来时间{:2d}, 优先级{}, 用时{:3d}, 结束时间{}.", cur_time, p.ID, p.arrival_time, p.priority, p.time_cost, cur_time + p.time_cost);
         cur_time += p.time_cost;
         p.exec_time = p.time_cost;
@@ -47,6 +50,7 @@ protected:
     }
 
     void exec_process(Proc& p, unsigned t) {
+        exec_order.push_back(p.ID);
         t = std::min(t, p.time_cost - p.exec_time);
         logger->debug("时刻{:4d}, 执行Proc{}, 任务到来时间{:2d}, 优先级{}, 用时{:3d}, 仍需{:3d}, 结束时间{}.",
              cur_time, p.ID, p.arrival_time, p.priority, t, p.time_cost - p.exec_time - t, cur_time + t);
@@ -58,6 +62,7 @@ protected:
 
 protected:
     std::shared_ptr<stslog::Logger> logger;
+    std::vector<unsigned> exec_order;
     unsigned cur_time = 0;
     std::vector<Proc> procs;
 };
