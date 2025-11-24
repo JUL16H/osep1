@@ -17,7 +17,7 @@ public:
         std::ranges::for_each(procs, [&](Proc &p){
             p = {
                 .ID = cur_id++,
-                .arrival_time = rng.randu(0, 100),
+                .arrival_time = rng.randu(0, 99),
                 .time_cost = rng.randu(1, 300),
                 .priority = rng.randu(1, 5),
             };
