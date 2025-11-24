@@ -4,7 +4,7 @@
 #include "ProcScheduler.hpp"
 
 int main() {
-    auto logger = stslog::make_logger("logger",{
+    auto logger = stslog::make_logger("logger", {
         {"stdoutSink", stslog::make_sink<stslog::Sinks::ColoredStdoutSink>()},
         {"fileSink", stslog::make_sink<stslog::Sinks::FileSink>("log.log")}
     });
@@ -14,12 +14,13 @@ int main() {
 
     ProcGenerator procGenerator;
     procGenerator.randomize_procs(10);
+    const auto & procs = procGenerator.get_procs();
 
-    ProcScheduler_FCFS{procGenerator.get_procs()}();
-    ProcScheduler_SJF{procGenerator.get_procs()}();
-    ProcScheduler_HPF{procGenerator.get_procs()}();
-    ProcScheduler_RR{procGenerator.get_procs()}();
-    ProcScheduler_MLFQ{procGenerator.get_procs()}();
+    ProcScheduler_FCFS{procs}();
+    ProcScheduler_SJF{procs}();
+    ProcScheduler_HPF{procs}();
+    ProcScheduler_RR{procs}();
+    ProcScheduler_MLFQ{procs}();
 
     return 0;
 }

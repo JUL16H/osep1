@@ -30,7 +30,7 @@ public:
                 i, procs[i].ID, procs[i].arrival_time, procs[i].time_cost, procs[i].priority);
     }
 
-    auto get_procs() const noexcept {
+    const auto& get_procs() const noexcept {
         return this->procs;
     }
 
