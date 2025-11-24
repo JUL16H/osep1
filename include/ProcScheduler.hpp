@@ -42,7 +42,17 @@ protected:
     void exec_process(Proc& p) {
         logger->debug("模拟时刻{}, 执行Proc{}, 任务到来时间{}, 优先级{}, 需要用时{}, 结束时间{}.", cur_time, p.ID, p.arrival_time, p.priority, p.time_cost, cur_time + p.time_cost);
         cur_time += p.time_cost;
+        p.exec_time = p.time_cost;
         p.finish_time = cur_time;
+    }
+
+    void exec_process(Proc& p, unsigned t) {
+        t = std::min(t, p.time_cost - p.exec_time);
+        logger->debug("模拟时刻{}, 执行Proc{}, 任务到来时间{}, 优先级{}, 需要用时{}, 结束时间{}.", cur_time, p.ID, p.arrival_time, p.priority, t, cur_time + t);
+        cur_time += t;
+        p.exec_time += t;
+        if (p.exec_time == p.time_cost)
+            p.finish_time = cur_time;
     }
 
 protected:
@@ -107,10 +117,8 @@ protected:
                 cur_time = procs[idx].arrival_time;
                 continue;
             }
-            if (!arrived_procs.empty()) {
-                exec_process(*arrived_procs.top());
-                arrived_procs.pop();
-            }
+            exec_process(*arrived_procs.top());
+            arrived_procs.pop();
         }
     }
     constexpr const char* method_name() override { return "HPF"; }
@@ -120,4 +128,37 @@ private:
     };
     unsigned idx = 0;
     std::priority_queue<Proc*, std::vector<Proc*>, cmp> arrived_procs;
+};
+
+class ProcScheduler_RR : public ProcSchedulerBase {
+public:
+    ProcScheduler_RR(std::vector<Proc> _procs) : ProcSchedulerBase(_procs) {}
+protected:
+    void run() override {
+        while (true) {
+            if (que.empty()) {
+                while (idx < procs.size() && cur_time >= procs[idx].arrival_time)
+                    que.push(&procs[idx++]);
+                if (que.empty()) {
+                    if (idx == procs.size())
+                        return;
+                    cur_time = procs[idx].arrival_time;
+                    continue;
+                }
+            }
+            else {
+                exec_process(*que.front(), clock_time());
+                while (idx < procs.size() && cur_time >= procs[idx].arrival_time)
+                    que.push(&procs[idx++]);
+                if (que.front()->exec_time < que.front()->time_cost)
+                    que.push(que.front());
+                que.pop();
+            }
+        }
+    }
+    constexpr const char* method_name() override { return "RR"; }
+private:
+    unsigned idx = 0;
+    std::queue<Proc*> que;
+    constexpr const unsigned clock_time() { return 100; }
 };
