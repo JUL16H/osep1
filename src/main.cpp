@@ -20,6 +20,5 @@ int main() {
     ProcScheduler_HPF{procGenerator.get_procs()}();
     ProcScheduler_RR{procGenerator.get_procs()}();
 
-
     return 0;
 }
