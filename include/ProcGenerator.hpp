@@ -29,7 +29,7 @@ public:
             logger->trace("proc{}: ID:{} arrival_time:{} time_cost: {} priority:{}", i, procs[i].ID, procs[i].arrival_time, procs[i].time_cost, procs[i].priority);
     }
 
-    auto get_procs() {
+    auto get_procs() const noexcept {
         return this->procs;
     }
 
