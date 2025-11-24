@@ -14,7 +14,7 @@ int main() {
 
     ProcGenerator procGenerator;
     procGenerator.randomize_procs(10);
-    const auto & procs = procGenerator.get_procs();
+    const auto& procs = procGenerator.get_procs();
 
     ProcScheduler_FCFS{procs}();
     ProcScheduler_SJF{procs}();
