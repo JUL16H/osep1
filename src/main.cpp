@@ -15,7 +15,7 @@ int main() {
     ProcGenerator procGenerator;
     procGenerator.randomize_procs(10);
 
-    ProcScheduler_FCFS {procGenerator.get_procs()}();
+    ProcScheduler_FCFS{procGenerator.get_procs()}();
     ProcScheduler_SJF{procGenerator.get_procs()}();
     ProcScheduler_HPF{procGenerator.get_procs()}();
     ProcScheduler_RR{procGenerator.get_procs()}();
