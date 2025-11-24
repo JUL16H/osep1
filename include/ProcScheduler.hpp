@@ -141,7 +141,8 @@ private:
 
 class ProcScheduler_RR : public ProcSchedulerBase {
 public:
-    ProcScheduler_RR(std::vector<Proc> _procs) : ProcSchedulerBase(_procs) {}
+    ProcScheduler_RR(std::vector<Proc> _procs, unsigned _ts = 100)
+     : ProcSchedulerBase(_procs), time_slice(_ts) {}
 protected:
     void run() override {
         while (true) {
@@ -156,7 +157,7 @@ protected:
                 }
             }
             else {
-                exec_process(*que.front(), clock_time());
+                exec_process(*que.front(), time_slice);
                 while (idx < procs.size() && cur_time >= procs[idx].arrival_time)
                     que.push(&procs[idx++]);
                 if (que.front()->exec_time < que.front()->time_cost)
@@ -169,13 +170,14 @@ protected:
 private:
     unsigned idx = 0;
     std::queue<Proc*> que;
-    constexpr const unsigned clock_time() { return 100; }
+    const unsigned time_slice;
 };
 
 class ProcScheduler_MLFQ : public ProcSchedulerBase {
 public:
-    ProcScheduler_MLFQ(std::vector<Proc> _procs) : ProcSchedulerBase(_procs) {
-        ques.resize(num_queue());
+    ProcScheduler_MLFQ(std::vector<Proc> _procs, unsigned _nq = 5,unsigned _ts = 5)
+     : ProcSchedulerBase(_procs), num_queue(_nq), base_time_slice(_ts) {
+        ques.resize(num_queue);
     }
 protected:
     void run() override {
@@ -190,12 +192,12 @@ protected:
                 cur_time = procs[idx].arrival_time;
                 continue;
             }
-            for (unsigned i = 0; i < num_queue(); i++) {
+            for (unsigned i = 0; i < num_queue; i++) {
                 if (!ques[i].empty()) {
                     exec_process(*ques[i].front(), exec_time(i));
                     if (ques[i].front()->exec_time < ques[i].front()->time_cost) {
-                        ques[i].front()->priority = std::min(i + 1, num_queue() - 1);
-                        ques[std::min(i + 1, num_queue() - 1)].push(ques[i].front());
+                        ques[i].front()->priority = std::min(i + 1, num_queue - 1);
+                        ques[std::min(i + 1, num_queue - 1)].push(ques[i].front());
                     }
                     ques[i].pop();
                     break;
@@ -206,7 +208,8 @@ protected:
     constexpr const char* method_name() override { return "MLFQ"; }
 private:
     unsigned idx = 0;
-    constexpr const unsigned num_queue() { return 5; }
-    constexpr const unsigned exec_time(unsigned i) { return 5<<i; }
+    const unsigned num_queue;
+    const unsigned base_time_slice;
+    const unsigned exec_time(unsigned i) const noexcept { return base_time_slice<<i; }
     std::vector<std::queue<Proc*>> ques;
 };
