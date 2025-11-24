@@ -44,7 +44,8 @@ protected:
 
     void exec_process(Proc& p) {
         exec_order.push_back(p.ID);
-        logger->debug("时刻{:4d}, 执行Proc{}, 任务到来时间{:2d}, 优先级{}, 用时{:3d}, 结束时间{}.", cur_time, p.ID, p.arrival_time, p.priority, p.time_cost, cur_time + p.time_cost);
+        logger->debug("时刻{:4d}, 执行Proc{}, 任务到来时间{:2d}, 优先级{}, 用时{:3d}, 结束时间{}.",
+            cur_time, p.ID, p.arrival_time, p.priority, p.time_cost, cur_time + p.time_cost);
         cur_time += p.time_cost;
         p.exec_time = p.time_cost;
         p.finish_time = cur_time;
@@ -54,7 +55,7 @@ protected:
         exec_order.push_back(p.ID);
         t = std::min(t, p.time_cost - p.exec_time);
         logger->debug("时刻{:4d}, 执行Proc{}, 任务到来时间{:2d}, 优先级{}, 用时{:3d}, 仍需{:3d}, 结束时间{}.",
-             cur_time, p.ID, p.arrival_time, p.priority, t, p.time_cost - p.exec_time - t, cur_time + t);
+            cur_time, p.ID, p.arrival_time, p.priority, t, p.time_cost - p.exec_time - t, cur_time + t);
         cur_time += t;
         p.exec_time += t;
         if (p.exec_time == p.time_cost)
@@ -131,7 +132,8 @@ protected:
     constexpr const char* method_name() override { return "HPF"; }
 private:
     struct cmp{
-        bool operator()(const Proc* a, const Proc* b) { return a->priority > b->priority || a->priority == b->priority && a->time_cost > b->time_cost; }
+        bool operator()(const Proc* a, const Proc* b)
+        { return a->priority > b->priority || a->priority == b->priority && a->time_cost > b->time_cost; }
     };
     unsigned idx = 0;
     std::priority_queue<Proc*, std::vector<Proc*>, cmp> arrived_procs;
