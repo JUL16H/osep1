@@ -133,7 +133,7 @@ protected:
 private:
     struct cmp{
         bool operator()(const Proc* a, const Proc* b)
-        { return a->priority > b->priority || a->priority == b->priority && a->time_cost > b->time_cost; }
+        { return a->priority > b->priority || a->priority == b->priority && a->arrival_time > b->arrival_time; }
     };
     unsigned idx = 0;
     std::priority_queue<Proc*, std::vector<Proc*>, cmp> arrived_procs;
