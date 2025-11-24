@@ -26,7 +26,8 @@ public:
 
         logger->debug("随机化完成.");
         for (unsigned i = 0; i < n; i++)
-            logger->trace("proc{}: ID:{} arrival_time:{} time_cost: {} priority:{}.", i, procs[i].ID, procs[i].arrival_time, procs[i].time_cost, procs[i].priority);
+            logger->trace("proc{}: ID:{} arrival_time:{} time_cost: {} priority:{}.",
+                i, procs[i].ID, procs[i].arrival_time, procs[i].time_cost, procs[i].priority);
     }
 
     auto get_procs() const noexcept {
