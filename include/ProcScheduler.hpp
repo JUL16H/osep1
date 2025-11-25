@@ -63,6 +63,7 @@ protected:
     }
 
 protected:
+    unsigned idx = 0;
     std::shared_ptr<stslog::Logger> logger;
     std::vector<Proc> procs;
     std::vector<unsigned> exec_order;
@@ -74,9 +75,9 @@ public:
     ProcScheduler_FCFS(std::vector<Proc> _procs) : ProcSchedulerBase(_procs) {}
 protected:
     void run() override {
-        for (unsigned i = 0; i < procs.size(); i++) {
-            cur_time = std::max(cur_time, procs[i].arrival_time);
-            exec_process(procs[i]);
+        for (idx = 0; idx < procs.size(); idx++) {
+            cur_time = std::max(cur_time, procs[idx].arrival_time);
+            exec_process(procs[idx]);
         }
     }
     constexpr const char* method_name() override { return "FCFS"; }
@@ -107,7 +108,6 @@ private:
     struct cmp{
         bool operator()(const Proc* a, const Proc* b) { return a->time_cost > b->time_cost; }
     };
-    unsigned idx = 0;
     std::priority_queue<Proc*, std::vector<Proc*>, cmp> arrived_procs;
 };
 
@@ -135,7 +135,6 @@ private:
         bool operator()(const Proc* a, const Proc* b)
         { return a->priority > b->priority || a->priority == b->priority && a->arrival_time > b->arrival_time; }
     };
-    unsigned idx = 0;
     std::priority_queue<Proc*, std::vector<Proc*>, cmp> arrived_procs;
 };
 
@@ -168,7 +167,6 @@ protected:
     }
     constexpr const char* method_name() override { return "RR"; }
 private:
-    unsigned idx = 0;
     std::queue<Proc*> que;
     const unsigned time_slice;
 };
@@ -207,7 +205,6 @@ protected:
     }
     constexpr const char* method_name() override { return "MLFQ"; }
 private:
-    unsigned idx = 0;
     const unsigned num_queue;
     const unsigned base_time_slice;
     const unsigned exec_time(unsigned i) const noexcept { return base_time_slice<<i; }
