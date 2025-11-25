@@ -9,7 +9,7 @@ int main() {
         {"fileSink", stslog::make_sink<stslog::Sinks::FileSink>("log.log")}
     });
     logger->set_level(stslog::LogLevel::TRACE);
-    logger->set_pattern("[%H:%M:%S] [%l] %v");
+    logger->set_pattern("[%H:%M:%S:%e] [%l] %v");
     stslog::LogRegistry::instance().enroll_logger(logger);
 
     ProcGenerator procGenerator;
