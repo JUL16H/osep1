@@ -11,10 +11,10 @@ public:
         logger = stslog::LogRegistry::instance().get_logger("logger");
     }
     ~ProcSchedulerBase() = default;
-    std::vector<unsigned> operator()() { return this->exec(); }
+    const std::vector<unsigned>& operator()() { return this->exec(); }
 
 protected:
-    std::vector<unsigned> exec() {
+    const std::vector<unsigned>& exec() {
         logger->info("使用{}.", this->method_name());
         run();
 
